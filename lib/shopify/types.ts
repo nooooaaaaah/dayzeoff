@@ -263,6 +263,19 @@ export type ShopifyBlogsOperation = {
   };
 };
 
+// todo article operations
+export type ShopifyArticleOperation = {
+  data: { articleByHandle: Article };
+  variables: { handle: string };
+};
+
+//todo articles operation
+export type ShopifyArticlesOperation = {
+  data: {
+    articles: Connection<Article>;
+  };
+};
+
 export type ShopifyPageOperation = {
   data: { pageByHandle: Page };
   variables: { handle: string };

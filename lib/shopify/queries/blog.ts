@@ -1,9 +1,13 @@
+import seoFragment from '../fragments/seo';
+
 const blogFragment = /* GraphQL */ `
   fragment blog on Blog {
     id
     title
     handle
-    url
+    seo {
+      ...seo
+    }
     articles(first: 100) {
       edges {
         node {
@@ -22,6 +26,7 @@ const blogFragment = /* GraphQL */ `
       }
     }
   }
+  ${seoFragment}
 `;
 
 export const getBlogQuery = /* GraphQL */ `
@@ -44,4 +49,24 @@ export const getBlogsQuery = /* GraphQL */ `
     }
   }
   ${blogFragment}
+`;
+
+// get article 
+const articleFragment = /* GraphQL */ `
+  fragment article on Article {
+    id
+    title
+    content
+    publishedAt
+    seo {
+      ...seo
+    }
+    author {
+      name
+    }
+    image {
+      src
+    }
+  }
+  ${seoFragment}
 `;

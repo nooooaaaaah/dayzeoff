@@ -10,6 +10,7 @@ import {
   editCartItemsMutation,
   removeFromCartMutation
 } from './mutations/cart';
+import { getArticleQuery } from './queries/article';
 import { getBlogQuery, getBlogsQuery } from './queries/blog';
 import { getCartQuery } from './queries/cart';
 import {
@@ -25,6 +26,7 @@ import {
   getProductsQuery
 } from './queries/product';
 import {
+  Article,
   Blog,
   Cart,
   Collection,
@@ -34,6 +36,7 @@ import {
   Page,
   Product,
   ShopifyAddToCartOperation,
+  ShopifyArticleOperation,
   ShopifyBlogOperation,
   ShopifyBlogsOperation,
   ShopifyCart,
@@ -392,6 +395,16 @@ export async function getBlogs(): Promise<Blog[]> {
   });
 
   return removeEdgesAndNodes(res.body.data.blogs);
+}
+
+//todo get article
+export async function getArticle(handle: string): Promise<Article> {
+  const res = await shopifyFetch<ShopifyArticleOperation>({
+    query: getArticleQuery,
+    variables: { handle }
+  });
+
+  return res.body.data.articleByHandle;
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
