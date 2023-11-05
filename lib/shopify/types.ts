@@ -1,3 +1,4 @@
+
 export type Maybe<T> = T | null;
 
 export type Connection<T> = {
@@ -48,6 +49,30 @@ export type Menu = {
 export type Money = {
   amount: string;
   currencyCode: string;
+};
+
+// todo article types
+export type Article = {
+  id: string;
+  title: string;
+  content: string;
+  publishedAt: string;
+  url: string;
+  author: {
+    name: string;
+  };
+  image: {
+    src: string;
+  };
+};
+
+// todo blog types
+export type Blog = {
+  id: string;
+  title: string;
+  handle: string;
+  url: string;
+  articles: Connection<Article>;
 };
 
 export type Page = {
@@ -223,6 +248,18 @@ export type ShopifyMenuOperation = {
   };
   variables: {
     handle: string;
+  };
+};
+
+//todo: blog operations
+export type ShopifyBlogOperation = {
+  data: { blogByHandle: Blog };
+  variables: { handle: string };
+};
+// todo blogs operation
+export type ShopifyBlogsOperation = {
+  data: {
+    blogs: Connection<Blog>;
   };
 };
 
