@@ -10,6 +10,7 @@ import {
   editCartItemsMutation,
   removeFromCartMutation
 } from './mutations/cart';
+import { getArticleQuery, getBlogQuery, getBlogsQuery } from './queries/blog';
 import { getCartQuery } from './queries/cart';
 import {
   getCollectionProductsQuery,
@@ -24,6 +25,8 @@ import {
   getProductsQuery
 } from './queries/product';
 import {
+  Article,
+  Blog,
   Cart,
   Collection,
   Connection,
@@ -32,6 +35,9 @@ import {
   Page,
   Product,
   ShopifyAddToCartOperation,
+  ShopifyArticleFromBlogOperation,
+  ShopifyBlogOperation,
+  ShopifyBlogsOperation,
   ShopifyCart,
   ShopifyCartOperation,
   ShopifyCollection,
@@ -302,7 +308,7 @@ export async function getCollectionProducts({
   });
 
   if (!res.body.data.collection) {
-    console.log(`No collection found for \`${collection}\``);
+    // console.log(`No collection found for \`${collection}\``);
     return [];
   }
 
@@ -369,6 +375,35 @@ export async function getPages(): Promise<Page[]> {
   });
 
   return removeEdgesAndNodes(res.body.data.pages);
+}
+
+// TODO get blog
+export async function getBlog(handle: string): Promise<Blog> {
+  const res = await shopifyFetch<ShopifyBlogOperation>({
+    query: getBlogQuery,
+    variables: { handle },
+  });
+  return res.body.data.blog;
+}
+
+export async function getBlogs(): Promise<Blog[]> {
+  const res = await shopifyFetch<ShopifyBlogsOperation>({
+    query: getBlogsQuery
+  });
+
+  return removeEdgesAndNodes(res.body.data.blogs);
+}
+// todo get article
+export async function getArticle(handle: string, blogHandle: string): Promise<Article> {
+  const res = await shopifyFetch<ShopifyArticleFromBlogOperation>({
+    query: getArticleQuery,
+    variables: { handle, blogHandle },
+  });
+
+  if (!res.body?.data?.blog?.articleByHandle) {
+    throw new Error(`No article found with handle: ${handle}`);
+  }
+  return res.body.data.blog.articleByHandle;
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
