@@ -1,72 +1,81 @@
 import seoFragment from '../fragments/seo';
 
 const blogFragment = /* GraphQL */ `
-  fragment blog on Blog {
+  fragment blog on Blog
+  ... on Blog {
     id
     title
     handle
     seo {
       ...seo
     }
-    articles(first: 100) {
-      edges {
-        node {
-          id
-          title
-          content
-          publishedAt
-          url
-          author {
-            name
-          }
-          image {
-            src
-          }
-        }
-      }
-    }
   }
   ${seoFragment}
+`;
+const articleFragment = /* GraphQL */ `
+  fragment article on Article {
+      id
+      title
+      handle
+      content
+      publishedAt
+      seo {
+        title
+        description
+      }
+      excerpt
+      tags
+      image {
+        src
+      }
+      authorV2 {
+        name
+    }
+  }
+`;
+export const getArticleQuery = /* GraphQL */ `
+  query getArticle($handle: String!, $blogHandle: String!) {
+  blog(handle: $blogHandle) {
+    articleByHandle(handle: $handle) {
+      ...article
+    }
+  }
+}
+  ${articleFragment}
 `;
 
 export const getBlogQuery = /* GraphQL */ `
-  query getBlog($handle: String!) {
-    blogByHandle(handle: $handle) {
-      ...blog
-    }
-  }
-  ${blogFragment}
-`;
-
-export const getBlogsQuery = /* GraphQL */ `
-  query getBlogs {
-    blogs(first: 100) {
-      edges {
-        node {
-          ...blog
+query BlogByHandle($handle: String!) {
+  blog(handle: $handle) {
+    id
+    title
+    articles(first: 10) {
+      nodes {
+        authorV2 {
+          name
         }
+        handle
+        excerpt
+        content
+        seo {
+          title
+          description
+        }
+        tags
       }
     }
   }
-  ${blogFragment}
+}
 `;
 
-// get article 
-const articleFragment = /* GraphQL */ `
-  fragment article on Article {
-    id
-    title
-    content
-    publishedAt
-    seo {
-      ...seo
-    }
-    author {
-      name
-    }
-    image {
-      src
+export const getBlogsQuery = /* GraphQL */ `
+query GetBlogs {
+  blogs(first: 10) {
+    edges {
+      node {
+        id
+      }
     }
   }
-  ${seoFragment}
+}
 `;

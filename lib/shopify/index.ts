@@ -10,8 +10,7 @@ import {
   editCartItemsMutation,
   removeFromCartMutation
 } from './mutations/cart';
-import { getArticleQuery } from './queries/article';
-import { getBlogQuery, getBlogsQuery } from './queries/blog';
+import { getArticleQuery, getBlogQuery, getBlogsQuery } from './queries/blog';
 import { getCartQuery } from './queries/cart';
 import {
   getCollectionProductsQuery,
@@ -36,7 +35,7 @@ import {
   Page,
   Product,
   ShopifyAddToCartOperation,
-  ShopifyArticleOperation,
+  ShopifyArticleFromBlogOperation,
   ShopifyBlogOperation,
   ShopifyBlogsOperation,
   ShopifyCart,
@@ -378,17 +377,15 @@ export async function getPages(): Promise<Page[]> {
   return removeEdgesAndNodes(res.body.data.pages);
 }
 
-// TODO get blog 
+// TODO get blog
 export async function getBlog(handle: string): Promise<Blog> {
   const res = await shopifyFetch<ShopifyBlogOperation>({
     query: getBlogQuery,
-    variables: { handle }
+    variables: { handle },
   });
-
-  return res.body.data.blogByHandle;
+  return res.body.data.blog;
 }
 
-// TODO get blogs
 export async function getBlogs(): Promise<Blog[]> {
   const res = await shopifyFetch<ShopifyBlogsOperation>({
     query: getBlogsQuery
@@ -396,15 +393,17 @@ export async function getBlogs(): Promise<Blog[]> {
 
   return removeEdgesAndNodes(res.body.data.blogs);
 }
-
-//todo get article
-export async function getArticle(handle: string): Promise<Article> {
-  const res = await shopifyFetch<ShopifyArticleOperation>({
+// todo get article
+export async function getArticle(handle: string, blogHandle: string): Promise<Article> {
+  const res = await shopifyFetch<ShopifyArticleFromBlogOperation>({
     query: getArticleQuery,
-    variables: { handle }
+    variables: { handle, blogHandle },
   });
-
-  return res.body.data.articleByHandle;
+  console.log(res.body.data);
+  if (!res.body?.data?.blog?.articleByHandle) {
+    throw new Error(`No article found with handle: ${handle}`);
+  }
+  return res.body.data.blog.articleByHandle;
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {

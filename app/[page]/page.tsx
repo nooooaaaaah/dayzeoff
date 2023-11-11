@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import Prose from 'components/prose';
-import { getPage } from 'lib/shopify';
+import { getBlog, getPage } from 'lib/shopify';
 import { notFound } from 'next/navigation';
 
 export const runtime = 'edge';
@@ -15,6 +15,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const page = await getPage(params.page);
 
+  console.log(`\t\t-----On Page ${page.title} -----`);
+  const blog = await getBlog("News")
+  // const article = await getArticle("asd", "News")
+  console.log({blog});
+  // const blogs = await getBlogs();
+
+  // blogs.forEach(element => {
+  //   console.log({ element })
+  // });
+
   if (!page) return notFound();
 
   return {
@@ -27,6 +37,7 @@ export async function generateMetadata({
     }
   };
 }
+
 
 export default async function Page({ params }: { params: { page: string } }) {
   const page = await getPage(params.page);

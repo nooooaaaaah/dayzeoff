@@ -54,25 +54,38 @@ export type Money = {
 // todo article types
 export type Article = {
   id: string;
+  authorV2: ArticleAuthor;
   title: string;
+  handle: string;
+  blog: Blog;
   content: string;
   publishedAt: string;
   url: string;
+  excerpt: string;
+  seo?: SEO;
   author: {
     name: string;
   };
-  image: {
+  image?: {
     src: string;
   };
 };
 
+export type ArticleAuthor = {
+  firstName: string;
+  lastName: string;
+  bio: string;
+  email: string;
+};
 // todo blog types
 export type Blog = {
   id: string;
+  articleByHandle?: Article;
+  articles: Connection<Article>;
   title: string;
   handle: string;
-  url: string;
-  articles: Connection<Article>;
+  onlineStoreUrl: string;
+  seo?: SEO;
 };
 
 export type Page = {
@@ -252,27 +265,20 @@ export type ShopifyMenuOperation = {
 };
 
 //todo: blog operations
+export type ShopifyArticleFromBlogOperation = {
+  data: { blog: Blog };
+  variables: { handle: string, blogHandle: string };
+};
+
+//todo: blogs operations
 export type ShopifyBlogOperation = {
-  data: { blogByHandle: Blog };
+  data: { blog: Blog };
   variables: { handle: string };
 };
-// todo blogs operation
+
 export type ShopifyBlogsOperation = {
   data: {
     blogs: Connection<Blog>;
-  };
-};
-
-// todo article operations
-export type ShopifyArticleOperation = {
-  data: { articleByHandle: Article };
-  variables: { handle: string };
-};
-
-//todo articles operation
-export type ShopifyArticlesOperation = {
-  data: {
-    articles: Connection<Article>;
   };
 };
 
