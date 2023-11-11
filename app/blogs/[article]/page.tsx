@@ -30,7 +30,7 @@ export default async function Article({
 }: {
   params: { article: string };
 }) {
-  console.log({ params })
+  // console.log({ params })
   const article = (await getArticle(params.article, 'News'));
 
   if (!article) return notFound();

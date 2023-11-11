@@ -308,7 +308,7 @@ export async function getCollectionProducts({
   });
 
   if (!res.body.data.collection) {
-    console.log(`No collection found for \`${collection}\``);
+    // console.log(`No collection found for \`${collection}\``);
     return [];
   }
 
@@ -399,7 +399,7 @@ export async function getArticle(handle: string, blogHandle: string): Promise<Ar
     query: getArticleQuery,
     variables: { handle, blogHandle },
   });
-  console.log(res.body.data);
+
   if (!res.body?.data?.blog?.articleByHandle) {
     throw new Error(`No article found with handle: ${handle}`);
   }
